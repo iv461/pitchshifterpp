@@ -5,7 +5,8 @@
 #include <stdint.h>
 /**
  * @brief FFTWPVAdapter adapter class to use FFTW with
- * PhaseVocoder, implicit interface containing rfft and rifft methods
+ * PhaseVocoder, implicit interface containing @ref rfft() and @ref rifft()
+ * methods.
  * The arrays allocated are not used as in the @ref rfft() and @ref rifft()
  * methods the in and out arrays are passed, but are needed if the FFTW
  * plans are created without FFTW_ESTIMATE.
