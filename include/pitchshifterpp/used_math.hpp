@@ -3,7 +3,6 @@
 
 #include <math.h>
 #include <stdint.h>
-#include <cmath>
 #include <cstring>
 
 namespace pv {
@@ -11,17 +10,16 @@ namespace pv {
 constexpr double pi = 3.14159265358979323846;
 constexpr double pi2 = 1.57079632679489661923;
 
-
 template <typename scalar_t>
-static constexpr scalar_t used_sin(scalar_t x) {
+static scalar_t used_sin(scalar_t x) {
     return std::sin(x);
 }
 template <typename scalar_t>
-static constexpr scalar_t used_cos(scalar_t x) {
+static scalar_t used_cos(scalar_t x) {
     return std::cos(x);
 }
 template <typename scalar_t>
-static constexpr scalar_t used_sqrt(scalar_t x) {
+static scalar_t used_sqrt(scalar_t x) {
     return std::sqrt(x);
 }
 
