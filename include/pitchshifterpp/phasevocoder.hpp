@@ -303,7 +303,7 @@ public:
 
     // the '__attribute__((aligned(16)))' (require 16 byte alignment)
     // is needed only for the FFTW adapter (you can also
-    // disable SIMD in the FFTW adaper)
+    // disable SIMD in the FFTW adapter)
     scalar_t m_fft_buffer1[window_size] __attribute__((aligned(16)));
     ComplexPolar<scalar_t> m_fft_buffer2[window_size / 2 + 1]
     __attribute__((aligned(16)));
