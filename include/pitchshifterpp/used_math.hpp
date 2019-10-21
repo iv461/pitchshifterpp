@@ -82,6 +82,48 @@ template<typename scalar_t>
 static void used_fill(scalar_t *p_dest, scalar_t value, uint32_t size) {
     std::memset(p_dest, value, size);
 }
+
+/**
+ * @brief cmplx_cartesian_to_polar in place-capable
+ * implementation of conversion from cartesian to
+ * polar on a complex-valued vector
+ */
+template<typename scalar_t>
+static void cmplx_cartesian_to_polar(scalar_t *out,
+                                     scalar_t const *in,
+                                     unsigned int length) {
+    scalar_t imag_tmp, real_tmp, squared_tmp;
+    for(unsigned i = 0; i < length; i++) {
+        real_tmp = in[0];
+        imag_tmp = in[1];
+        in += 2;
+        squared_tmp = real_tmp * real_tmp + imag_tmp * imag_tmp;
+        out[0] = used_sqrt(squared_tmp);
+        out[1] = used_atan2(imag_tmp, real_tmp);
+        out += 2;
+    }
+}
+
+/**
+ * @brief cmplx_polar_to_cartesian in place-capable
+ * implementation of conversion from polar to
+ * cartesian on a complex-valued vector
+ */
+template <typename scalar_t>
+static void cmplx_polar_to_cartesian(scalar_t *complex_out,
+                                     scalar_t const *complex_in,
+                                     unsigned int length) {
+    scalar_t mag_tmp, phase_tmp;
+    for(unsigned i = 0; i < length; i++) {
+        mag_tmp = complex_in[0];
+        phase_tmp = complex_in[1];
+        complex_out[0] = mag_tmp * used_cos(phase_tmp);
+        complex_out[1] = mag_tmp * used_sin(phase_tmp);
+        complex_in += 2;
+        complex_out += 2;
+    }
+}
+
 } // end namespace pv
 
 #endif // USED_MATH_HPP

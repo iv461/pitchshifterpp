@@ -6,7 +6,13 @@
 /**
  * @brief FFTWPVAdapter adapter class to use FFTW with
  * PhaseVocoder, implicit interface containing rfft and rifft methods
- *
+ * The arrays allocated are not used as in the @ref rfft() and @ref rifft()
+ * methods the in and out arrays are passed, but are needed if the FFTW
+ * plans are created without FFTW_ESTIMATE.
+ * The fftw_execute* functions are not able to determine if the momory
+ * alignment of the input and output arrays are correct
+ * so unless FFTW_NO_SIMD is specified on plan creation
+ * the memory must be 16-byte aligned.
  */
 class FFTWPVAdapter
 {

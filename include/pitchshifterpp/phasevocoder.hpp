@@ -22,7 +22,7 @@ struct ComplexPolar {
 };
 
 /**
- * @brief simple circular iterator for native arrays, no checks
+ * @brief simple circular iterator for plain arrays, no checks
  */
 template<typename T>
 class circular_iterator {
@@ -77,6 +77,10 @@ protected:
     bool m_is_full = false;
 };
 
+/**
+ * @brief wraps x to the range [-pi, pi[
+ * @param x input to be wrapped
+ */
 template <typename scalar_t>
 static scalar_t wrap_phase(scalar_t x) {
     constexpr auto pi_times_2 = static_cast<scalar_t>(2. * pi);
@@ -86,91 +90,8 @@ static scalar_t wrap_phase(scalar_t x) {
 }
 
 /**
- * @brief cmplx_cartesian_to_polar in place-capable
- * implementation of conversion from cartesian  to
- * polar on comlex vector ; length must be multiple of 4
+ * @brief Hann window function
  */
-template<typename scalar_t>
-static void cmplx_cartesian_to_polar(ComplexPolar<scalar_t> *out,
-                                     Complex<scalar_t> const *in,
-                                     unsigned int length) {
-    // 4 times loop unrolling
-    unsigned cnt = length / 4;
-    // to be able to do in place
-    scalar_t imag_tmp, real_tmp, squared_tmp;
-    while (cnt) {
-        real_tmp = in->real;
-        imag_tmp = in->imag;
-        in++;
-        squared_tmp = real_tmp * real_tmp + imag_tmp * imag_tmp;
-        out->magnitude = used_sqrt(squared_tmp);
-        out->phase = used_atan2(imag_tmp, real_tmp);
-        out++;
-        real_tmp = in->real;
-        imag_tmp = in->imag;
-        in++;
-        squared_tmp = real_tmp * real_tmp + imag_tmp * imag_tmp;
-        out->magnitude = used_sqrt(squared_tmp);
-        out->phase = used_atan2(imag_tmp, real_tmp);
-        out++;
-        real_tmp = in->real;
-        imag_tmp = in->imag;
-        in++;
-        squared_tmp = real_tmp * real_tmp + imag_tmp * imag_tmp;
-        out->magnitude = used_sqrt(squared_tmp);
-        out->phase = used_atan2(imag_tmp, real_tmp);
-        out++;
-        real_tmp = in->real;
-        imag_tmp = in->imag;
-        in++;
-        squared_tmp = real_tmp * real_tmp + imag_tmp * imag_tmp;
-        out->magnitude = used_sqrt(squared_tmp);
-        out->phase = used_atan2(imag_tmp, real_tmp);
-        out++;
-        cnt--;
-    }
-}
-
-/**
- * @brief cmplx_polar_to_cartesian in place capable, 4 times loop unroling
- * length must be multiple of 4
- */
-template <typename scalar_t>
-static void cmplx_polar_to_cartesian(Complex<scalar_t> *complex_out,
-                                     ComplexPolar<scalar_t> const *complex_in,
-                                     unsigned int length) {
-    // 4 times loop unrolling
-    unsigned cnt = length / 4;
-    scalar_t mag_tmp, phase_tmp;
-    while (cnt) {
-        mag_tmp = complex_in->magnitude;
-        phase_tmp = complex_in->phase;
-        complex_out->real = mag_tmp * used_cos(phase_tmp);
-        complex_out->imag = mag_tmp * used_sin(phase_tmp);
-        complex_in++;
-        complex_out++;
-        mag_tmp = complex_in->magnitude;
-        phase_tmp = complex_in->phase;
-        complex_out->real = mag_tmp * used_cos(phase_tmp);
-        complex_out->imag = mag_tmp * used_sin(phase_tmp);
-        complex_in++;
-        complex_out++;
-        mag_tmp = complex_in->magnitude;
-        phase_tmp = complex_in->phase;
-        complex_out->real = mag_tmp * used_cos(phase_tmp);
-        complex_out->imag = mag_tmp * used_sin(phase_tmp);
-        complex_in++;
-        complex_out++;
-        mag_tmp = complex_in->magnitude;
-        phase_tmp = complex_in->phase;
-        complex_out->real = mag_tmp * used_cos(phase_tmp);
-        complex_out->imag = mag_tmp * used_sin(phase_tmp);
-        complex_in++;
-        complex_out++;
-        cnt--;
-    }
-}
-
 template <typename scalar_t>
 static scalar_t hann(scalar_t x) {
     return .5 * (1. - used_cos(static_cast<scalar_t>(pi) * 2 * x));
@@ -304,16 +225,18 @@ public:
                                reinterpret_cast<scalar_t*>(m_fft_buffer2));
 
             // convert to polar, in-place
-            cmplx_cartesian_to_polar(m_fft_buffer2,
-                                     reinterpret_cast<Complex<scalar_t>*>
+            cmplx_cartesian_to_polar(reinterpret_cast<scalar_t*>
+                                     (m_fft_buffer2),
+                                     reinterpret_cast<scalar_t const *>
                                      (m_fft_buffer2), (window_size / 2));
 
             correct_phase(syn_hop_size);
 
             // covert to cartesian again
-            cmplx_polar_to_cartesian(reinterpret_cast<Complex<scalar_t>*>
-                                     (m_fft_buffer2), m_fft_buffer2,
-                                     (window_size / 2));
+            cmplx_polar_to_cartesian(reinterpret_cast<scalar_t*>
+                                     (m_fft_buffer2),
+                                     reinterpret_cast<scalar_t const*>
+                                     (m_fft_buffer2), (window_size / 2));
 
             // do inverse FFT
             m_fft_adapter.rifft(reinterpret_cast<scalar_t*>(m_fft_buffer2),
