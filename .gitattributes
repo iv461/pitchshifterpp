@@ -1,3 +1,0 @@
-include/fftw export-ignore
-include/libsndfile export-ignore
-*.wav binary

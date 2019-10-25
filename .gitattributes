@@ -1,0 +1,5 @@
+/cmake_modules linguist-vendored=true 
+/lib linguist-vendored=true
+/include/fftw linguist-detectable=false
+/include/libsndfile linguist-vendored=true
+*.wav binary
