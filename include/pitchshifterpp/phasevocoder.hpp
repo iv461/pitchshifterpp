@@ -1,13 +1,10 @@
 #ifndef PHASEVOCODER_HPP
 #define PHASEVOCODER_HPP
 
-#include "used_math.hpp"
-
-#include <math.h>
+#include <cmath>
 #include <stdint.h>
 
-#include <cmath>
-#include <cstring>
+#include "used_math.hpp"
 
 namespace pv {
 
@@ -78,7 +75,7 @@ protected:
 };
 
 /**
- * @brief wraps x to the range [-pi, pi[
+ * @brief wraps x to the inteval [-pi, pi[
  * @param x input to be wrapped
  */
 template <typename scalar_t>

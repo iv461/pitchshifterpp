@@ -1,12 +1,20 @@
 ## Real Time Phase Vocoder
 
 Real-time capable implementation of the phase vocoder algorithm for audio pitch shifting.
+Single C++ Header implementation with additional headers for the used math functions
+and the adapter for the used fft functions.
+
+Memory relevant parameters like the window size are template parameters, all needed memory is 
+reserved at compile time, thus making it suitable for memory-constrained embedded platforms.
+
+The ``` phasevocoder.hpp ``` header is dependency-free, but for the test application which operates
+on Wave files, ```FFTW``` and ```libsdnfile``` are needed.
 
 ## Building
 
 ### On Linux
 
-Install dependencies:
+Install dependencies, e.g with APT:
 
 ``` sudo apt install libfftw3-dev && sudo apt install libsndfile1-dev ```
 
@@ -16,7 +24,11 @@ Build:
 
 Launch:
 
-``` ./pitchshifterpp sine1k.wav ```
+``` ./pitchshifterpp <wav_file> <semitones_to_scale> ```
+
+With example sound files:
+
+``` ./pitchshifterpp sine1k.wav <semitones_to_scale> ```
 
 The file ``` output.wav ``` should get generated.
 

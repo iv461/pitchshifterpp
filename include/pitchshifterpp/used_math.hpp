@@ -1,5 +1,9 @@
 #ifndef USED_MATH_HPP
 #define USED_MATH_HPP
+/**
+  * @brief used math functions which can be changed if
+  * e.g for different platfoms
+*/
 
 #include <math.h>
 #include <stdint.h>
@@ -68,6 +72,7 @@ static float used_atan2(float y, float x) {
     }
     return result;
 }
+
 
 template <typename scalar_t>
 static scalar_t used_fmod(scalar_t x, scalar_t y) {
