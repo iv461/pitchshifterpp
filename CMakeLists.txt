@@ -12,7 +12,7 @@ if(UNIX)
     find_package(FFTW REQUIRED)
     find_package(LibSndFile REQUIRED)
 elseif(WIN32)
-	message( FATAL_ERROR "no windows support, use the specific branch
+	message( FATAL_ERROR "no windows support, use the specific branch")
 endif()
 
 include_directories(

@@ -34,7 +34,8 @@ The file ``` output.wav ``` should get generated.
 
 ### On Windows
 
-For windows the dependencies are included, build in the same way like for Linux.
+For windows the dependencies (x64) are included, build in the same way like for Linux.
+Tested with MinGW and MSVC.
 
 ## License
 
