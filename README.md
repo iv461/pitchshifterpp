@@ -7,8 +7,9 @@ and the adapter for the used fft functions.
 Memory relevant parameters like the window size are template parameters, all needed memory is 
 reserved at compile time, thus making it suitable for memory-constrained embedded platforms.
 
-The ``` phasevocoder.hpp ``` header is dependency-free, but for the test application which operates
-on Wave files, ```FFTW``` and ```libsdnfile``` are needed.
+The ``` phasevocoder.hpp ``` header is dependency-free but a FFT implementation is needed
+for which ``` FFTW ``` is used and for the test application which operates
+on Wave files, ```libsdnfile``` is needed.
 
 ## Building
 
@@ -16,7 +17,7 @@ on Wave files, ```FFTW``` and ```libsdnfile``` are needed.
 
 Install dependencies, e.g with APT:
 
-``` sudo apt install libfftw3-dev && sudo apt install libsndfile1-dev ```
+``` sudo apt install libfftw3-dev libsndfile1-dev ```
 
 Build:
 
