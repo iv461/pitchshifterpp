@@ -8,18 +8,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake_modules)
 
-if(UNIX)
-    find_package(FFTW REQUIRED)
-    find_package(LibSndFile REQUIRED)
-elseif(WIN32)
-	message( FATAL_ERROR "no windows support, use the specific branch")
-endif()
+find_package(FFTW REQUIRED)
+find_package(LibSndFile REQUIRED)
 
 include_directories(
     include
     include/pitchshifterpp
     )
-
 
 # for qt creator to be able to find the files for autcomplete and so on
 file(GLOB_RECURSE SOURCES *.cpp *.cc *.cxx)
