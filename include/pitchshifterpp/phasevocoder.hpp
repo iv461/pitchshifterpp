@@ -6,6 +6,14 @@
 
 #include "used_math.hpp"
 
+#if defined(_MSC_VER)
+#define ALIGNED_(x) __declspec(align(x))
+#else
+#if defined(__GNUC__)
+#define ALIGNED_(x) __attribute__ ((aligned(x)))
+#endif
+#endif
+
 namespace pv {
 
 template <typename scalar_t>
@@ -143,12 +151,12 @@ public:
         m_ana_hop_inv(1. / static_cast<scalar_t>(m_ana_hop_size)),
         m_fft_adapter(fft_adapter)
     {
-        used_fill<scalar_t>(m_pre_ana_phase_frame, 0,
+        used_fill(m_pre_ana_phase_frame, 0,
                             sizeof(m_pre_ana_phase_frame));
-        used_fill<scalar_t>(m_pre_syn_phase_frame, 0,
+        used_fill(m_pre_syn_phase_frame, 0,
                             sizeof(m_pre_syn_phase_frame));
-        used_fill<scalar_t>(m_ana_frame, 0, sizeof(m_ana_frame));
-        used_fill<scalar_t>(m_syn_frame, 0, sizeof(m_syn_frame));
+        used_fill(m_ana_frame, 0, sizeof(m_ana_frame));
+        used_fill(m_syn_frame, 0, sizeof(m_syn_frame));
         init_window();
     }
     void correct_phase(scalar_t syn_hop_size) {
@@ -188,7 +196,8 @@ public:
     void process(scalar_t *input_buffer, scalar_t *output_buffer,
                  uint32_t input_size, scalar_t scaling_factor) {
 
-        uint32_t syn_hop_size = std::round(m_ana_hop_size * scaling_factor);
+        auto syn_hop_size = 
+			static_cast<uint32_t>(std::round(m_ana_hop_size * scaling_factor));
         if(window_size * scaling_factor > max_syn_size) {
             // not enought memory for scaling with this high scaling factor
             return;
@@ -298,32 +307,36 @@ public:
     scalar_t const m_omega = static_cast<scalar_t>(2 * pi) / window_size;
     scalar_t const m_ana_hop_inv;
 
-    // the '__attribute__((aligned(16)))' (require 16 byte alignment)
-    // is needed only for the FFTW adapter (you can also
+    // requiring 16 byte alignmentis needed only 
+	// for the FFTW adapter (you can also
     // disable SIMD in the FFTW adapter)
-    scalar_t m_fft_buffer1[window_size] __attribute__((aligned(16)));
-    ComplexPolar<scalar_t> m_fft_buffer2[window_size / 2 + 1]
-    __attribute__((aligned(16)));
 
+	alignas(16) scalar_t m_fft_buffer1[window_size];
+	
+	alignas(16) ComplexPolar<scalar_t> m_fft_buffer2[window_size / 2 + 1];
+    
     /**
      * @brief m_pre_ana_phase_frame previous analysis frame phase
      */
-    scalar_t m_pre_ana_phase_frame[window_size / 2]
-    __attribute__((aligned(16)));
+	alignas(16) scalar_t m_pre_ana_phase_frame[window_size / 2];
+   
     /**
      * @brief m_pre_syn_phase_frame previous synthesis frame phase
      */
-    scalar_t m_pre_syn_phase_frame[window_size / 2]
-    __attribute__((aligned(16)));
+	alignas(16) scalar_t m_pre_syn_phase_frame[window_size / 2];
+    
     /**
      * @brief m_fft_window precomputed values of the window function
      * for all samples of the window_size
      */
-    scalar_t m_fft_window[window_size] __attribute__((aligned(16)));
-    scalar_t m_ana_frame[window_size * 2] __attribute__((aligned(16)));
+	alignas(16) scalar_t m_fft_window[window_size];
+	
+	alignas(16) scalar_t m_ana_frame[window_size * 2];
+	
     circular_iterator<scalar_t> m_ana_frame_it
     { m_ana_frame, window_size * 2 };
-    scalar_t m_syn_frame[max_syn_size * 2] __attribute__((aligned(16)));
+	alignas(16) scalar_t m_syn_frame[max_syn_size * 2];
+	
 
     circular_iterator<scalar_t> m_syn_frame_it
     { m_syn_frame, max_syn_size * 2 };

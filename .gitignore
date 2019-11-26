@@ -37,6 +37,7 @@ Thumbs.db
 
 *.user
 
+build
 build*
 
 # qtcreator generated files

@@ -32,8 +32,10 @@ public:
     {
     }
 
-    FFTWPVAdapter(FFTWPVAdapter const &other) = delete;
-    FFTWPVAdapter &operator=(FFTWPVAdapter const &other) = delete;
+    FFTWPVAdapter(FFTWPVAdapter const &) = delete;
+    FFTWPVAdapter &operator=(FFTWPVAdapter const &) = delete;
+	FFTWPVAdapter(FFTWPVAdapter&&) = delete;
+	FFTWPVAdapter &operator=(FFTWPVAdapter&&) = delete;
 
     void rfft(double *in, double *out) {
         fftw_execute_dft_r2c(m_r2c_plan, in,

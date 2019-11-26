@@ -81,8 +81,8 @@ static scalar_t used_fmod(scalar_t x, scalar_t y) {
     return remain;
 }
 
-template<typename scalar_t>
-static void used_fill(scalar_t *p_dest, scalar_t value, uint32_t size) {
+template <typename scalar_t>
+static void used_fill(scalar_t *p_dest, int value, uint32_t size) {
     std::memset(p_dest, value, size);
 }
 

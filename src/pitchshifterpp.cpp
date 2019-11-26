@@ -20,7 +20,7 @@ using std::string;
 using std::vector;
 using namespace std::chrono;
 
-int main(int argc, char* argv[])
+int main(int argc, char const* argv[])
 {
     if(argc != 3) {
         cout << "Invalid number of arguments provided\n";
@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
     using scalar_t = double;
     constexpr uint32_t window_size = 512;
     constexpr scalar_t max_scale_factor = 1.5;
-    constexpr scalar_t overlap_factor = 4;
+    constexpr uint32_t overlap_factor = 4;
 
     int semitones_to_scale;
     try {
